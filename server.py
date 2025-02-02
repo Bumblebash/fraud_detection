@@ -1,21 +1,30 @@
-from flask import Flask, request, jsonify
-import joblib
+from flask import Flask, request, jsonify, render_template
 import numpy as np
+import joblib
 
 app = Flask(__name__)
 
-# Load the model
+# Load trained model & scaler
 model = joblib.load("fraud_detection_model.pkl")
+scaler = joblib.load("scaler.pkl")
 
+# Re-save the model properly
+joblib.dump(model, "fraud_detection_model.pkl")
+joblib.dump(scaler, "scaler.pkl")
+
+# Serve HTML UI
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+# API endpoint for prediction
 @app.route("/predict", methods=["POST"])
 def predict():
-    data = request.json["features"]
-    prediction = model.predict([np.array(data)])
-    return jsonify({"fraudulent": bool(prediction[0])})
-
-def home():
-    return "Model is running!"
-
+    data = request.get_json()
+    features = np.array(data["features"]).reshape(1, -1)
+    features_scaled = scaler.transform(features)
+    prediction = model.predict(features_scaled)
+    return jsonify({"prediction": int(prediction[0])})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Credit Card Fraud Detection</h2>
+    <form id="fraudForm">
+        <label for="features">Enter Features (comma-separated):</label>
+        <input type="text" id="features" required>
+        <button type="submit">Predict</button>
+    </form>
+    <h3>Prediction Result: <span id="result"></span></h3>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
