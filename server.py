@@ -13,5 +13,9 @@ def predict():
     prediction = model.predict([np.array(data)])
     return jsonify({"fraudulent": bool(prediction[0])})
 
+def home():
+    return "Model is running!"
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
